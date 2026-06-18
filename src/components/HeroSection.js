@@ -562,9 +562,9 @@ export default function HeroSection() {
           <div className="stat-divider" />
           <div className="stat-item social-links">
             {["GH", "LI", "TW"].map((s) => (
-              <a key={s} href="#" className="social-link" data-mag="link">
-                {s}
-              </a>
+            <a key={s} href="/" className="social-link" data-mag="link">
+  {s}
+</a>
             ))}
           </div>
         </div>

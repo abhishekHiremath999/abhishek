@@ -1,13 +1,64 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: black;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* ✅ Background fix */
+.bg-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.bg-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 🔥 FIX */
+  filter: blur(6px) brightness(0.5);
+  transform: scale(1.05);
+}
+
+/* ✅ overlay */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, transparent 40%, black 90%);
+}
+
+/* ✅ center layout */
+.center {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ✅ helmet */
+.helmet {
+  width: 320px;
+  height: 320px;
+}
+
+/* ✅ text */
+.text {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.text h1 {
+  font-size: 64px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #00ffff, #ff003c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text p {
+  opacity: 0.7;
 }

@@ -1,0 +1,549 @@
+/* ═══════════════════════════════════════════════════════════════════
+   HERO — MOBILE OVERRIDE  (max-width: 768px)
+   Drop this AFTER Hero.css in your import order.
+   All cursor rings/dot are hidden on touch — replaced by
+   a touch-ripple system and full-viewport scroll motion.
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  /* ─────────────────────────────────────────
+     0. RESET / BASE
+  ───────────────────────────────────────── */
+  :root {
+    --nav-h  : 56px;
+    --bar-h  : 64px;
+    --gutter : 20px;
+  }
+
+  body {
+    /* Smooth momentum scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+  }
+
+  /* ─────────────────────────────────────────
+     1. KILL DESKTOP CURSOR SYSTEM
+        (rings, dot, rgb ghosts)
+  ───────────────────────────────────────── */
+  .c-dot,
+  .c-ring,
+  .c-ring-1,
+  .c-ring-2,
+  .c-ring-3,
+  .c-rgb,
+  .c-rgb-r,
+  .c-rgb-b {
+    display: none !important;
+  }
+
+  body { cursor: auto; }
+  a, button { cursor: pointer; }
+
+  /* ─────────────────────────────────────────
+     2. TOUCH RIPPLE (appended by JS on tap)
+        Add class "touch-ripple" to the body
+        then remove after animation completes.
+  ───────────────────────────────────────── */
+  .m-ripple {
+    position: fixed;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    z-index: 9999;
+    background: transparent;
+    border: 1.5px solid rgba(0, 229, 255, 0.7);
+    animation: mRipple 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes mRipple {
+    0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    60%  { opacity: 0.5; }
+    100% { transform: translate(-50%, -50%) scale(9); opacity: 0; }
+  }
+
+  /* ─────────────────────────────────────────
+     3. HERO SHELL
+  ───────────────────────────────────────── */
+  .hero {
+    height: 100svh;      /* safe-area aware */
+    overflow: hidden;
+    background: #030303;
+  }
+
+  /* ─────────────────────────────────────────
+     4. NAV
+  ───────────────────────────────────────── */
+  .hero-nav {
+    height: var(--nav-h);
+    padding: 0 var(--gutter);
+    background: rgba(3, 3, 3, 0.85);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .nav-links,
+  .nav-status { display: none; }
+
+  .nav-logo {
+    font-size: 24px;
+    letter-spacing: 3px;
+  }
+
+  /* Hamburger ghost — purely decorative lines on mobile */
+  .nav-logo::after {
+    content: "";
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: rgba(255, 255, 255, 0.2);
+    margin-top: 5px;
+    box-shadow: 0 5px 0 rgba(255, 255, 255, 0.2), 0 10px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* ─────────────────────────────────────────
+     5. PHOTO PANEL — full-width, cinematic
+  ───────────────────────────────────────── */
+  .photo-perspective {
+    width: 100%;
+    height: 100%;
+    perspective: none;   /* no 3-D tilt on touch */
+  }
+
+  .photo-panel {
+    clip-path: none;
+    transform: none !important; /* override JS tilt */
+    will-change: auto;
+  }
+
+  /* Slightly deeper contrast for OLED screens */
+  .base-photo {
+    object-position: center 15%;
+    filter: contrast(1.15) saturate(1.05) brightness(0.78);
+  }
+
+  /* Stronger left-vignette so name text pops */
+  .photo-grad-l {
+    background: linear-gradient(
+      to bottom,
+      rgba(3, 3, 3, 0.55) 0%,
+      rgba(3, 3, 3, 0.35) 35%,
+      rgba(3, 3, 3, 0.18) 62%,
+      transparent 80%
+    );
+    z-index: 6;
+  }
+
+  /* Heavy bottom vignette — pulls focus to name */
+  .photo-grad-b {
+    height: 58%;
+    background: linear-gradient(
+      to top,
+      rgba(3, 3, 3, 1)    0%,
+      rgba(3, 3, 3, 0.88) 28%,
+      rgba(3, 3, 3, 0.55) 55%,
+      transparent         80%
+    );
+    z-index: 6;
+  }
+
+  /* Hide portal ring on mobile — no hover here */
+  .portal-ring { display: none; }
+  .reveal-photo { clip-path: none !important; mix-blend-mode: normal; opacity: 0; }
+
+  /* Reduce glare overlay */
+  .photo-glare { opacity: 0.4; }
+
+  /* Scanlines — keep but slow them */
+  .photo-scanlines { animation-duration: 22s; }
+
+  /* Slash line */
+  .slash-line { display: none; }
+
+  /* RGB ghost flickers — keep subtle ambient effect */
+  .g-r, .g-b { opacity: 0; }
+
+  /* Badge repositioned to top-left instead of right */
+  .photo-badge {
+    top: calc(var(--nav-h) + 14px);
+    right: auto;
+    left: var(--gutter);
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.48);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Glide in on load */
+    animation: badgeSlide 0.9s 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    transform: translateZ(0);
+  }
+  @keyframes badgeSlide {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ─────────────────────────────────────────
+     6. GIANT NAME BLOCK
+  ───────────────────────────────────────── */
+  .hero-name-block {
+    width: 100%;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+    bottom: calc(var(--bar-h) + 52px);
+  }
+
+  .nl {
+    font-size: clamp(62px, 18.5vw, 96px);
+    line-height: 0.88;
+    letter-spacing: -1.5px;
+    /* Subtle ambient text shimmer */
+    animation: nameShimmer 7s 2.5s ease-in-out infinite;
+  }
+  @keyframes nameShimmer {
+    0%, 100% { filter: brightness(1); }
+    50%       { filter: brightness(1.08) drop-shadow(0 0 18px rgba(0, 229, 255, 0.18)); }
+  }
+
+  .nl2 { margin-left: 14px; }
+
+  /* ─────────────────────────────────────────
+     7. ROLE LABEL
+  ───────────────────────────────────────── */
+  .hero-role { display: none; }
+
+  /* Inline role beneath name — mobile only */
+  .hero-name-block::after {
+    content: "/ Full Stack Developer";
+    display: block;
+    font-family: "Space Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(0, 229, 255, 0.55);
+    margin-top: 12px;
+    padding-left: 4px;
+    animation: roleReveal 0.7s 2.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes roleReveal {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─────────────────────────────────────────
+     8. SCROLL INDICATOR — vertical pulse bar
+  ───────────────────────────────────────── */
+  .hero-scroll-indicator {
+    display: flex !important;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(var(--bar-h) + 12px);
+    writing-mode: horizontal-tb;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-scroll-indicator span {
+    font-size: 7px;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.22);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    animation: scrollAnim 2s ease-in-out infinite;
+  }
+
+  /* ─────────────────────────────────────────
+     9. STATS BAR
+  ───────────────────────────────────────── */
+  .stats-bar {
+    padding: 0 var(--gutter);
+    height: var(--bar-h);
+    background: rgba(3, 3, 3, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .stats-bar::-webkit-scrollbar { display: none; }
+
+  .stat-item {
+    padding-right: 18px;
+    margin-right: 18px;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .stat-num { font-size: 22px; }
+
+  .stat-label {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+  }
+
+  .stat-divider { min-width: 12px; }
+
+  .social-links {
+    gap: 14px !important;
+  }
+  .social-link { font-size: 8px; }
+
+  /* ─────────────────────────────────────────
+     10. GRAIN — heavier for OLED drama
+  ───────────────────────────────────────── */
+  .grain-overlay {
+    opacity: 0.055;
+    animation-duration: 0.3s;
+  }
+
+  /* ─────────────────────────────────────────
+     11. SECTIONS — scroll-driven reveal
+         Uses CSS scroll-driven animations
+         (Chrome 115+, Safari 18+, FF 128+).
+         Falls back to visible for older browsers.
+  ───────────────────────────────────────── */
+  .section {
+    height: auto;
+    min-height: 100svh;
+    padding: 72px var(--gutter) 64px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: visible;
+  }
+
+  .section::before {
+    left: var(--gutter);
+    right: var(--gutter);
+  }
+
+  /* Mobile section inner: stacked layout */
+  .section-inner {
+    text-align: left;
+    width: 100%;
+  }
+
+  .section-num {
+    font-size: 8px;
+    letter-spacing: 5px;
+    margin-bottom: 12px;
+  }
+
+  .section h2 {
+    font-size: clamp(44px, 14vw, 80px);
+    letter-spacing: -0.5px;
+    line-height: 0.92;
+  }
+
+  /* ── CSS scroll-driven entry animation ── */
+  @supports (animation-timeline: scroll()) {
+
+    .section-inner {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: sectionReveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 38%;
+    }
+
+    @keyframes sectionReveal {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Number counter ticks in slightly before heading */
+    .section-num {
+      animation: numReveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 28%;
+    }
+
+    @keyframes numReveal {
+      from { opacity: 0; letter-spacing: 12px; color: rgba(0, 229, 255, 0); }
+      to   { opacity: 0.42; letter-spacing: 5px; color: var(--accent); }
+    }
+
+    /* H2 slides in from left */
+    .section h2 {
+      animation: headingSlide linear both;
+      animation-timeline: view();
+      animation-range: entry 8% entry 42%;
+    }
+
+    @keyframes headingSlide {
+      from { opacity: 0; transform: translateX(-24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+  }
+
+  /* ── Fallback (no scroll timeline support) ── */
+  @supports not (animation-timeline: scroll()) {
+    .section-inner { opacity: 1; transform: none; }
+    .section-num   { opacity: 0.42; }
+    .section h2    { opacity: 1; }
+  }
+
+  /* ─────────────────────────────────────────
+     12. SECTION COLOUR ACCENTS — mobile
+  ───────────────────────────────────────── */
+  .about-section {
+    background: #060606;
+  }
+
+  /* Ambient glow blob — painted via CSS, no JS */
+  .about-section::after {
+    content: "";
+    position: absolute;
+    top: 30%;
+    right: -60px;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.07) 0%, transparent 70%);
+    pointer-events: none;
+    animation: blobDrift 9s ease-in-out infinite alternate;
+  }
+  @keyframes blobDrift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-20px, 30px) scale(1.12); }
+  }
+
+  .projects-section {
+    background: #040404;
+  }
+  .projects-section::after {
+    content: "";
+    position: absolute;
+    bottom: 20%;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 0, 255, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    animation: blobDrift 11s ease-in-out infinite alternate-reverse;
+  }
+
+  .contact-section {
+    background: #050505;
+  }
+  .contact-section::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -40px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 136, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    animation: blobDrift 13s ease-in-out infinite alternate;
+  }
+
+  /* ─────────────────────────────────────────
+     13. SCROLL PROGRESS INDICATOR
+         A thin accent line that grows from
+         top to bottom as the user scrolls.
+  ───────────────────────────────────────── */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100vh;
+    background: linear-gradient(180deg, var(--accent, #00e5ff) 0%, rgba(0, 229, 255, 0.3) 100%);
+    transform-origin: top center;
+    transform: scaleY(0);
+    z-index: 9990;
+    pointer-events: none;
+    border-radius: 0 0 2px 2px;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    body::before {
+      animation: scrollProgress linear;
+      animation-timeline: scroll(root block);
+    }
+    @keyframes scrollProgress {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+  }
+
+  /* ─────────────────────────────────────────
+     14. CURTAIN WIPE — same on mobile
+  ───────────────────────────────────────── */
+  .curtain {
+    /* Already animated by GSAP — no changes needed */
+  }
+
+  /* ─────────────────────────────────────────
+     15. SAFE-AREA INSETS (iPhone notch / home bar)
+  ───────────────────────────────────────── */
+  .hero-nav {
+    padding-top: env(safe-area-inset-top);
+    height: calc(var(--nav-h) + env(safe-area-inset-top));
+  }
+
+  .stats-bar {
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(var(--bar-h) + env(safe-area-inset-bottom));
+  }
+
+  /* ─────────────────────────────────────────
+     16. MOTION PREFERENCE — respect reduce-motion
+  ───────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+
+    .nl,
+    .photo-badge,
+    .hero-name-block::after,
+    .about-section::after,
+    .projects-section::after,
+    .contact-section::after,
+    .grain-overlay,
+    .status-dot,
+    .scroll-line,
+    .photo-scanlines,
+    .portal-inner {
+      animation: none !important;
+    }
+
+    .section-inner,
+    .section-num,
+    .section h2 {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    body::before { display: none; }
+  }
+
+} /* end @media (max-width: 768px) */
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   TOUCH RIPPLE INJECTION SCRIPT (paste once in your index.js/main.js)
+   ───────────────────────────────────────────────────────────────────
+   if ('ontouchstart' in window) {
+     document.addEventListener('touchstart', (e) => {
+       const t = e.touches[0];
+       const el = document.createElement('div');
+       el.className = 'm-ripple';
+       el.style.left = t.clientX + 'px';
+       el.style.top  = t.clientY + 'px';
+       document.body.appendChild(el);
+       setTimeout(() => el.remove(), 700);
+     }, { passive: true });
+   }
+   ═══════════════════════════════════════════════════════════════════ */

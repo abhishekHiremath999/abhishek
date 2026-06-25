@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import me from "../assets/me.png";
 import hoverImg from "../assets/i.png";
 import "./Hero.css";
+import "./Hero.mobile.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
